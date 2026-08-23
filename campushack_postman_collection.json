@@ -1,0 +1,125 @@
+{
+	"info": {
+		"_postman_id": "c1f2e3d4-5678-90ab-cdef-1234567890ab",
+		"name": "CampusHack Management System API Collection",
+		"description": "Postman Collection for testing CampusHack REST APIs with OTP Verification",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Register Account (Sends OTP)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"johndoe\",\n  \"password\": \"password123\",\n  \"fullName\": \"John Doe\",\n  \"email\": \"john.doe@campushack.edu\",\n  \"rollNumber\": \"CS2024-099\",\n  \"branch\": \"Computer Science\",\n  \"yearOfStudy\": \"2nd Year\",\n  \"role\": \"PARTICIPANT\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/auth/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"auth",
+								"register"
+							]
+						}
+					}
+				},
+				{
+					"name": "Verify Email OTP",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"john.doe@campushack.edu\",\n  \"otpCode\": \"123456\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/auth/verify-otp",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"auth",
+								"verify-otp"
+							]
+						}
+					}
+				},
+				{
+					"name": "Login User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"loginIdentifier\": \"john.doe@campushack.edu\",\n  \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Hackathons",
+			"item": [
+				{
+					"name": "Get All Hackathons",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "http://localhost:8080/api/hackathons",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"hackathons"
+							]
+						}
+					}
+				}
+			]
+		}
+	]
+}
