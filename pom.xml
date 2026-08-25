@@ -12,6 +12,7 @@
     <groupId>com.hackathon</groupId>
     <artifactId>campushack</artifactId>
     <version>1.0.0</version>
+    <packaging>war</packaging>
     <name>CampusHack Management System</name>
     <description>Hackathon Management System for Colleges</description>
 
@@ -89,6 +90,15 @@
     </dependencies>
 
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+            <resource>
+                <directory>src/main/webapp</directory>
+                <targetPath>META-INF/resources</targetPath>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
