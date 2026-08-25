@@ -2,9 +2,48 @@
 
 document.addEventListener('DOMContentLoaded', () => {
     console.log('CampusHack Design System Loaded ⚡');
+    initAdminTheme();
     initPasswordToggles();
     initCustomDropdowns();
 });
+
+/* ============================================================
+   ADMIN THEME TOGGLE (Dopamine vs Professional Minimalist)
+   ============================================================ */
+function initAdminTheme() {
+    const savedTheme = localStorage.getItem('campushack_admin_theme');
+    if (savedTheme === 'professional') {
+        document.body.classList.add('theme-professional');
+        updateAdminThemeButton(true);
+    } else {
+        document.body.classList.remove('theme-professional');
+        updateAdminThemeButton(false);
+    }
+}
+
+function toggleAdminTheme() {
+    const isPro = document.body.classList.toggle('theme-professional');
+    if (isPro) {
+        localStorage.setItem('campushack_admin_theme', 'professional');
+    } else {
+        localStorage.setItem('campushack_admin_theme', 'dopamine');
+    }
+    updateAdminThemeButton(isPro);
+}
+
+function updateAdminThemeButton(isPro) {
+    const btnText = document.getElementById('adminThemeToggleText');
+    const btnIcon = document.getElementById('adminThemeToggleIcon');
+    if (btnText && btnIcon) {
+        if (isPro) {
+            btnText.textContent = 'DOPAMINE 🎨';
+            btnIcon.textContent = 'palette';
+        } else {
+            btnText.textContent = 'PRO MODE 👔';
+            btnIcon.textContent = 'style';
+        }
+    }
+}
 
 /* ============================================================
    AUTOMATED MAXIMALIST CUSTOM DROPDOWN COMPONENT
@@ -15,8 +54,12 @@ function initCustomDropdowns() {
         if (select.dataset.customized === "true") return;
         select.dataset.customized = "true";
 
-        // Hide raw select
-        select.style.display = 'none';
+        // Hide raw select but keep it accessible for form validation
+        select.style.position = 'absolute';
+        select.style.opacity = '0';
+        select.style.width = '1px';
+        select.style.height = '1px';
+        select.style.pointerEvents = 'none';
 
         // Create container wrapper
         const container = document.createElement('div');
@@ -39,56 +82,89 @@ function initCustomDropdowns() {
         menu.className = 'custom-select-menu';
 
         // Populate options
-        Array.from(select.options).forEach((opt, idx) => {
-            const optDiv = document.createElement('div');
-            optDiv.className = 'custom-select-option' + (idx === select.selectedIndex ? ' selected' : '');
-            optDiv.innerHTML = `
-                <span>${opt.textContent}</span>
-                <span class="material-symbols-outlined icon-check" style="font-size: 16px; opacity: ${idx === select.selectedIndex ? 1 : 0};">check</span>
-            `;
+        if (select.options.length === 0) {
+            const emptyOpt = document.createElement('div');
+            emptyOpt.className = 'custom-select-option disabled';
+            emptyOpt.style.opacity = '0.6';
+            emptyOpt.style.cursor = 'not-allowed';
+            emptyOpt.textContent = 'No options available';
+            menu.appendChild(emptyOpt);
+        } else {
+            Array.from(select.options).forEach((opt, idx) => {
+                const optDiv = document.createElement('div');
+                const isSelected = idx === select.selectedIndex;
+                const isDisabled = opt.disabled;
+                
+                optDiv.className = 'custom-select-option' + 
+                    (isSelected ? ' selected' : '') + 
+                    (isDisabled ? ' disabled' : '');
 
-            optDiv.addEventListener('click', (e) => {
-                e.stopPropagation();
-                select.selectedIndex = idx;
-                select.value = opt.value;
+                if (isDisabled) {
+                    optDiv.style.opacity = '0.5';
+                    optDiv.style.cursor = 'not-allowed';
+                }
 
-                // Update UI
-                trigger.querySelector('.trigger-label').textContent = opt.textContent;
-                menu.querySelectorAll('.custom-select-option').forEach((el, i) => {
-                    if (i === idx) {
-                        el.classList.add('selected');
-                        el.querySelector('.icon-check').style.opacity = 1;
-                    } else {
-                        el.classList.remove('selected');
-                        el.querySelector('.icon-check').style.opacity = 0;
-                    }
-                });
+                optDiv.innerHTML = `
+                    <span>${opt.textContent}</span>
+                    <span class="material-symbols-outlined icon-check" style="font-size: 16px; opacity: ${isSelected ? 1 : 0};">check</span>
+                `;
 
-                closeMenu();
+                if (!isDisabled) {
+                    optDiv.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        select.selectedIndex = idx;
+                        select.value = opt.value;
 
-                // Trigger change event for reactive forms
-                select.dispatchEvent(new Event('change', { bubbles: true }));
+                        // Update UI
+                        trigger.querySelector('.trigger-label').textContent = opt.textContent;
+                        menu.querySelectorAll('.custom-select-option').forEach((el, i) => {
+                            if (i === idx) {
+                                el.classList.add('selected');
+                                const check = el.querySelector('.icon-check');
+                                if (check) check.style.opacity = '1';
+                            } else {
+                                el.classList.remove('selected');
+                                const check = el.querySelector('.icon-check');
+                                if (check) check.style.opacity = '0';
+                            }
+                        });
+
+                        closeMenu();
+
+                        // Trigger change event for reactive forms
+                        select.dispatchEvent(new Event('change', { bubbles: true }));
+                    });
+                }
+
+                menu.appendChild(optDiv);
             });
-
-            menu.appendChild(optDiv);
-        });
+        }
 
         // Toggle open/close
         function openMenu() {
-            // Close other open menus
             document.querySelectorAll('.custom-select-menu.open').forEach(m => {
                 if (m !== menu) {
                     m.classList.remove('open');
                     if (m.previousElementSibling) m.previousElementSibling.classList.remove('active');
+                    const otherContainer = m.closest('.custom-select-container');
+                    if (otherContainer) otherContainer.style.zIndex = '';
+                    const otherPanel = m.closest('.glass-panel');
+                    if (otherPanel) otherPanel.style.zIndex = '';
                 }
             });
             menu.classList.add('open');
             trigger.classList.add('active');
+            container.style.zIndex = '9999';
+            const panel = container.closest('.glass-panel');
+            if (panel) panel.style.zIndex = '999';
         }
 
         function closeMenu() {
             menu.classList.remove('open');
             trigger.classList.remove('active');
+            container.style.zIndex = '';
+            const panel = container.closest('.glass-panel');
+            if (panel) panel.style.zIndex = '';
         }
 
         trigger.addEventListener('click', (e) => {
@@ -113,10 +189,12 @@ function initCustomDropdowns() {
                 menu.querySelectorAll('.custom-select-option').forEach((el, i) => {
                     if (i === select.selectedIndex) {
                         el.classList.add('selected');
-                        el.querySelector('.icon-check').style.opacity = 1;
+                        const check = el.querySelector('.icon-check');
+                        if (check) check.style.opacity = '1';
                     } else {
                         el.classList.remove('selected');
-                        el.querySelector('.icon-check').style.opacity = 0;
+                        const check = el.querySelector('.icon-check');
+                        if (check) check.style.opacity = '0';
                     }
                 });
             }

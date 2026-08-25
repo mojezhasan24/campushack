@@ -574,6 +574,16 @@ select:-webkit-autofill {
     position: relative;
     width: 100%;
     user-select: none;
+    z-index: 1;
+}
+
+.custom-select-container:has(.custom-select-menu.open) {
+    z-index: 9999 !important;
+}
+
+.glass-panel:has(.custom-select-menu.open),
+.glass-panel:focus-within {
+    z-index: 100;
 }
 
 .custom-select-trigger {
@@ -605,7 +615,7 @@ select:-webkit-autofill {
 
 .custom-select-trigger.active {
     border-color: var(--secondary);
-    box-shadow: 0 0 0 3px rgba(0,245,212,0.35), 0 0 24px rgba(0,245,212,0.5), 6px 6px 0 var(--accent);
+    box-shadow: 0 0 0 3px rgba(0,245,212,0.35), 0 0 24px rgba(0,245,212,0.4);
 }
 
 .custom-select-trigger .icon-chevron {
@@ -920,4 +930,126 @@ select:-webkit-autofill {
         animation-iteration-count: 1 !important;
         transition-duration: 0.15s !important;
     }
+}
+
+/* ============================================================
+   ADMIN PROFESSIONAL MINIMALIST THEME (MONOCHROME MODE)
+   Keeps layout, typography, structure, & animations 100% intact
+   ============================================================ */
+body.theme-professional {
+    --bg: #0F172A;
+    --fg: #F8FAFC;
+    --muted: #1E293B;
+
+    --accent: #38BDF8;      /* Crisp Sky Blue */
+    --secondary: #94A3B8;   /* Cool Slate */
+    --tertiary: #CBD5E1;    /* Platinum Silver */
+    --quaternary: #64748B;  /* Steel Gray */
+    --quinary: #475569;     /* Dark Slate Border */
+
+    --primary-light: #BAE6FD;
+    --secondary-light: #94A3B8;
+    --tertiary-dark: #334155;
+    --border-color: #475569;
+
+    --text-primary: #F8FAFC;
+    --text-muted: rgba(203, 213, 225, 0.65);
+    --surface: rgba(30, 41, 59, 0.75);
+    --surface-high: rgba(30, 41, 59, 0.95);
+    background-color: #0F172A !important;
+}
+
+/* Glass Panels & Cards in Professional Mode */
+body.theme-professional .glass-panel {
+    background: rgba(30, 41, 59, 0.88);
+    border-color: #475569 !important;
+    box-shadow: 6px 6px 0 rgba(15, 23, 42, 0.7) !important;
+}
+
+body.theme-professional .glass-panel:hover {
+    box-shadow: 8px 8px 0 rgba(56, 189, 248, 0.25), 10px 10px 0 rgba(15, 23, 42, 0.8) !important;
+}
+
+/* Typography & Watermarks */
+body.theme-professional .watermark-bg {
+    color: rgba(255, 255, 255, 0.025) !important;
+}
+
+body.theme-professional .gradient-text {
+    background: linear-gradient(135deg, #FFFFFF 0%, #94A3B8 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+}
+
+/* Background Patterns */
+body.theme-professional .pattern-dots {
+    background-image: radial-gradient(circle, rgba(148, 163, 184, 0.15) 1px, transparent 1px) !important;
+}
+body.theme-professional .pattern-stripes {
+    background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(148, 163, 184, 0.05) 10px, rgba(148, 163, 184, 0.05) 20px) !important;
+}
+body.theme-professional .pattern-checker {
+    background-image: conic-gradient(from 90deg at 1px 1px, transparent 90deg, rgba(148, 163, 184, 0.05) 0) !important;
+}
+
+/* Chips & Badges */
+body.theme-professional .chip-primary,
+body.theme-professional .chip-secondary,
+body.theme-professional .chip-tertiary,
+body.theme-professional .chip-quaternary,
+body.theme-professional .chip-quinary {
+    background: rgba(51, 65, 85, 0.7) !important;
+    color: #F8FAFC !important;
+    border-color: #64748B !important;
+}
+
+/* Buttons */
+body.theme-professional .btn-primary {
+    background: #38BDF8 !important;
+    color: #0F172A !important;
+    border-color: #38BDF8 !important;
+    box-shadow: 4px 4px 0 #1E293B !important;
+}
+body.theme-professional .btn-primary:hover {
+    background: #0284C7 !important;
+    color: #FFFFFF !important;
+    border-color: #0284C7 !important;
+}
+
+body.theme-professional .btn-secondary {
+    background: #475569 !important;
+    color: #FFFFFF !important;
+    border-color: #64748B !important;
+    box-shadow: 4px 4px 0 #1E293B !important;
+}
+
+body.theme-professional .btn-outline {
+    background: rgba(30, 41, 59, 0.6) !important;
+    color: #F8FAFC !important;
+    border-color: #64748B !important;
+    box-shadow: 4px 4px 0 #1E293B !important;
+}
+
+body.theme-professional .btn-tertiary {
+    background: rgba(71, 85, 105, 0.4) !important;
+    color: #E2E8F0 !important;
+    border-color: #94A3B8 !important;
+}
+
+/* Form Controls & Dropdowns */
+body.theme-professional .custom-select-trigger,
+body.theme-professional .custom-select-menu,
+body.theme-professional .form-input,
+body.theme-professional .form-select,
+body.theme-professional .form-textarea {
+    background: rgba(30, 41, 59, 0.95) !important;
+    border-color: #475569 !important;
+    color: #F8FAFC !important;
+}
+
+/* Data Tables */
+body.theme-professional .data-table th {
+    background: #1E293B !important;
+    color: #94A3B8 !important;
+    border-bottom-color: #475569 !important;
 }

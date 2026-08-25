@@ -97,8 +97,8 @@
                                         ${h.startDate} to ${h.endDate}
                                     </div>
                                 </td>
-                                <td><span class="text-muted label-sm" style="color: var(--tertiary);">${h.registrationDeadline}</span></td>
-                                <td><strong style="color: var(--secondary); font-size: 1.1rem;">$${h.prizePool}</strong></td>
+                                <td><span class="text-muted label-sm" style="color: var(--tertiary);">${h.formattedRegistrationDeadline}</span></td>
+                                <td><strong style="color: var(--secondary); font-size: 1.1rem;">${h.formattedPrizePool}</strong></td>
                                 <td><span class="chip chip-quinary" style="font-size: 11px;">${h.maxTeamSize} max</span></td>
                                 <td>
                                     <div style="display: flex; gap: 10px;">

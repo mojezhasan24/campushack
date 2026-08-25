@@ -53,4 +53,9 @@ public class User {
             createdAt = LocalDateTime.now();
         }
     }
+
+    public String getFormattedCreatedAt() {
+        if (createdAt == null) return "N/A";
+        return createdAt.format(java.time.format.DateTimeFormatter.ofPattern("dd MMM yyyy, hh:mm a"));
+    }
 }

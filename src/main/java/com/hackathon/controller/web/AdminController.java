@@ -116,6 +116,25 @@ public class AdminController {
         return "redirect:/admin/users";
     }
 
+    @PostMapping("/users/change-password/{id}")
+    public String changeUserPassword(@PathVariable Long id,
+                                     @RequestParam String newPassword,
+                                     HttpSession session,
+                                     RedirectAttributes redirectAttributes) {
+        User loggedIn = (User) session.getAttribute("user");
+        if (loggedIn == null || loggedIn.getRole() != Role.ADMIN) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Unauthorized: Only administrators can modify user passwords.");
+            return "redirect:/admin/users";
+        }
+        try {
+            userService.changeUserPassword(id, newPassword, loggedIn.getId());
+            redirectAttributes.addFlashAttribute("successMessage", "Password successfully updated for user! 🔑");
+        } catch (IllegalArgumentException ex) {
+            redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
+        }
+        return "redirect:/admin/users";
+    }
+
     @GetMapping("/export/students")
     public ResponseEntity<byte[]> exportStudentsCsv(
             @RequestParam(required = false) Long hackathonId,

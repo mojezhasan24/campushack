@@ -18,6 +18,8 @@
                        class="nav-link ${pageContext.request.servletPath.contains('dashboard') ? 'active' : ''}">⚡ Dashboard</a>
                     <a href="<c:url value='/discover'/>"
                        class="nav-link ${pageContext.request.servletPath.contains('discover') || pageContext.request.servletPath.contains('discovery') ? 'active' : ''}">🚀 Discover</a>
+                    <a href="<c:url value='/recruitment/browse'/>"
+                       class="nav-link ${pageContext.request.servletPath.contains('recruitment') ? 'active' : ''}">🤝 Find a Team</a>
                 </c:if>
 
                 <%-- Admin links --%>
@@ -44,6 +46,15 @@
         <div style="display: flex; align-items: center; gap: 12px; flex-shrink: 0;">
             <c:choose>
                 <c:when test="${not empty sessionScope.user}">
+                    <c:if test="${sessionScope.role == 'ADMIN'}">
+                        <button type="button" id="adminThemeToggleBtn" onclick="toggleAdminTheme()" class="btn btn-outline" style="padding: 6px 12px; font-size: 11px; border-width: 2px;" title="Switch Theme (Professional Minimalist vs Dopamine)">
+                            <span id="adminThemeToggleIcon" class="material-symbols-outlined" style="font-size: 15px;">style</span>
+                            <span id="adminThemeToggleText">PRO MODE 👔</span>
+                        </button>
+                    </c:if>
+                    <a href="<c:url value='/notifications'/>" class="chip chip-secondary" style="padding: 6px 10px; font-size: 14px; text-decoration: none;" title="Notifications">
+                        🔔
+                    </a>
                     <div style="display: flex; align-items: center; gap: 8px;">
                         <span class="chip chip-tertiary" style="font-size: 10px; text-transform: uppercase; border-width: 2px;">${sessionScope.role}</span>
                         <span class="label-sm" style="color: var(--fg); max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 800;">${sessionScope.user.fullName}</span>

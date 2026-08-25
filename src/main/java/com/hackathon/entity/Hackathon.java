@@ -41,4 +41,17 @@ public class Hackathon {
 
     @Builder.Default
     private boolean deleted = false;
+
+    public String getFormattedPrizePool() {
+        if (prizePool == null) return "$0";
+        if (prizePool == Math.floor(prizePool)) {
+            return String.format("$%,d", prizePool.longValue());
+        }
+        return String.format("$%,.2f", prizePool);
+    }
+
+    public String getFormattedRegistrationDeadline() {
+        if (registrationDeadline == null) return "N/A";
+        return registrationDeadline.format(java.time.format.DateTimeFormatter.ofPattern("dd MMM yyyy"));
+    }
 }

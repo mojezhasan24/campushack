@@ -171,7 +171,7 @@
                                                 <h4 style="font-size: 15px; font-weight: 800; color: #FFF; line-height: 1.3;">${h.title}</h4>
                                                 <p class="text-muted" style="font-size: 12px; margin-top: 4px; font-weight: 700; color: var(--secondary);">${h.category}</p>
                                             </div>
-                                            <span class="chip chip-tertiary" style="font-size: 11px; white-space: nowrap;">$${h.prizePool}</span>
+                                            <span class="chip chip-tertiary" style="font-size: 11px; white-space: nowrap;">${h.formattedPrizePool}</span>
                                         </div>
                                     </a>
                                 </c:forEach>

@@ -55,6 +55,19 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    @Transactional
+    public User changeUserPassword(Long userId, String newPassword, Long currentAdminId) {
+        if (newPassword == null || newPassword.trim().isEmpty()) {
+            throw new IllegalArgumentException("New password cannot be empty.");
+        }
+        if (newPassword.trim().length() < 4) {
+            throw new IllegalArgumentException("Password must be at least 4 characters long.");
+        }
+        User user = getUserById(userId);
+        user.setPassword(newPassword.trim());
+        return userRepository.save(user);
+    }
+
     public String exportStudentDataCsv(Long hackathonId, String branch, String yearOfStudy, LocalDate registeredAfterDate, Boolean last3Hackathons) {
         LocalDateTime registeredAfter = registeredAfterDate != null ? registeredAfterDate.atStartOfDay() : null;
         List<Long> last3HackathonIds = null;
