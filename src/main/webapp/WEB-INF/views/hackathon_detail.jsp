@@ -228,8 +228,7 @@ async function handleCreateTeam(e) {
         if (res.ok) {
             resDiv.style.display = 'flex';
             resDiv.className = 'alert-banner success';
-            resDiv.innerHTML = '<span class="material-symbols-outlined" style="font-size:20px;">check_circle</span> Team created! Your invite code: <strong style="letter-spacing:0.15em; font-size: 18px; margin-left: 6px;">' + data.inviteCode + '</strong>';
-            setTimeout(() => window.location.reload(), 2500);
+            resDiv.innerHTML = '<span class="material-symbols-outlined" style="font-size:20px;">check_circle</span> Team created! Your invite code: <strong style="letter-spacing:0.15em; font-size: 18px; margin-left: 6px;">' + data.inviteCode + '</strong> <button type="button" class="btn btn-outline" style="margin-left: 12px; padding: 4px 8px; font-size: 12px; cursor: pointer;" onclick="navigator.clipboard.writeText(\'' + data.inviteCode + '\'); this.innerText=\'Copied!\';">Copy</button>';
         } else {
             resDiv.style.display = 'flex';
             resDiv.className = 'alert-banner error';

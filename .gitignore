@@ -1,4 +1,5 @@
 target/
+apache-maven-*/
 *.jar
 *.war
 *.ear

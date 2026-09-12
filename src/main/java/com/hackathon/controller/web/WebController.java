@@ -51,7 +51,9 @@ public class WebController {
         }
 
         List<Hackathon> hackathons = hackathonService.getAllHackathons();
+        List<Team> userTeams = registrationService.getTeamsForUser(user);
         model.addAttribute("hackathons", hackathons);
+        model.addAttribute("userTeams", userTeams);
         model.addAttribute("activeEventsCount", hackathons.stream().filter(h -> h.getStatus() == HackathonStatus.ACTIVE || h.getStatus() == HackathonStatus.UPCOMING).count());
         return "dashboard";
     }

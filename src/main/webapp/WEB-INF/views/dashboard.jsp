@@ -151,6 +151,35 @@
 
             <!-- Sidebar: Upcoming Hackathons -->
             <div>
+                <!-- My Teams Section -->
+                <div class="glass-panel" style="padding: 28px; margin-bottom: 24px; border-color: var(--accent);">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
+                        <span class="material-symbols-outlined icon-filled" style="color: var(--accent); font-size: 26px;">group</span>
+                        <h3 class="h3" style="color: var(--accent);">MY TEAMS</h3>
+                    </div>
+
+                    <c:choose>
+                        <c:when test="${empty userTeams}">
+                            <p class="text-muted label-sm" style="text-align: center; padding: 12px 0;">You are not in any teams.</p>
+                        </c:when>
+                        <c:otherwise>
+                            <div style="display: flex; flex-direction: column; gap: 14px;">
+                                <c:forEach var="t" items="${userTeams}">
+                                    <div style="padding: 16px; background: rgba(13,13,26,0.6); border: 1px solid rgba(255,58,242,0.3); border-radius: 12px;">
+                                        <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px;">
+                                            <div>
+                                                <h4 style="font-size: 15px; font-weight: 800; color: #FFF; margin-bottom: 4px;">${t.teamName}</h4>
+                                                <p class="text-muted" style="font-size: 12px;">Code: <strong style="color: var(--accent); letter-spacing: 0.1em;">${t.inviteCode}</strong></p>
+                                            </div>
+                                            <button onclick="navigator.clipboard.writeText('${t.inviteCode}'); this.innerText='Copied!';" class="btn btn-outline" style="padding: 4px 8px; font-size: 11px;">Copy</button>
+                                        </div>
+                                    </div>
+                                </c:forEach>
+                            </div>
+                        </c:otherwise>
+                    </c:choose>
+                </div>
+
                 <div class="glass-panel" style="padding: 28px; position: sticky; top: 96px; border-color: var(--quinary);">
                     <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
                         <span class="material-symbols-outlined icon-filled animate-wiggle" style="color: var(--quaternary); font-size: 26px;">local_fire_department</span>

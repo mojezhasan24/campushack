@@ -59,6 +59,10 @@ public class RegistrationService {
         return teamRepository.findByHackathon(hackathon);
     }
 
+    public List<Team> getTeamsForUser(User user) {
+        return teamRepository.findByMembersContaining(user);
+    }
+
     public Team getTeamById(Long teamId) {
         return teamRepository.findById(teamId)
                 .orElseThrow(() -> new IllegalArgumentException("Team not found with id: " + teamId));
