@@ -15,7 +15,7 @@ public class OpenApiConfig {
                 .info(new Info()
                         .title("CampusHack Management System REST API")
                         .version("1.0.0")
-                        .description("REST API Documentation for CampusHack Hackathon Portal endpoints including Auth, Hackathons, Teams, Submissions, and Judge Ratings.")
+                        .description("REST API Documentation for CampusHack Hackathon Portal endpoints including Auth, Hackathons, Teams, and Submissions.")
                         .contact(new Contact()
                                 .name("CampusHack Support")
                                 .email("support@campushack.edu")));

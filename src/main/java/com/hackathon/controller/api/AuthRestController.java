@@ -43,7 +43,7 @@ public class AuthRestController {
     }
 
     @PostMapping("/register")
-    @Operation(summary = "Register new account", description = "Register a new user account (Student, Admin, or Judge) and dispatch 6-digit OTP email")
+    @Operation(summary = "Register new account", description = "Register a new user account (Student, or Admin) and dispatch 6-digit OTP email")
     public ResponseEntity<?> register(@RequestBody RegisterRequest request, HttpSession session) {
         User user = authService.registerUser(
                 request.getUsername(),

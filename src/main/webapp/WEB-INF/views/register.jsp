@@ -50,7 +50,7 @@
                     <select class="form-select" id="role" onchange="toggleStudentFields()" style="padding: 8px 36px 8px 12px; font-size: 0.88rem; border-radius: 12px;" required>
                         <option value="PARTICIPANT">Student / Participant 🚀</option>
                         <option value="ADMIN">Faculty / Admin 🛡️</option>
-                        <option value="JUDGE">Judge ⚖️</option>
+
                     </select>
                 </div>
 

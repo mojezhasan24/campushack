@@ -240,7 +240,7 @@ async function handleLogin(e) {
             btnText.textContent = 'REDIRECTING…';
             const role = data.user.role;
             if (role === 'ADMIN')      window.location.href = '<c:url value="/admin/analytics"/>';
-            else if (role === 'JUDGE') window.location.href = '<c:url value="/judge/eval"/>';
+
             else                       window.location.href = '<c:url value="/dashboard"/>';
         } else {
             const msg = data.message || 'Invalid credentials. Please try again.';

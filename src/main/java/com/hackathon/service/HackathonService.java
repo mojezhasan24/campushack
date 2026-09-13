@@ -5,7 +5,7 @@ import com.hackathon.entity.HackathonStatus;
 import com.hackathon.entity.Team;
 import com.hackathon.entity.User;
 import com.hackathon.repository.HackathonRepository;
-import com.hackathon.repository.SubmissionRepository;
+
 import com.hackathon.repository.TeamRepository;
 import com.hackathon.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,6 @@ public class HackathonService {
     private final HackathonRepository hackathonRepository;
     private final UserRepository userRepository;
     private final TeamRepository teamRepository;
-    private final SubmissionRepository submissionRepository;
 
     public List<Hackathon> getAllHackathons() {
         return hackathonRepository.findByDeletedFalse();
@@ -103,12 +102,12 @@ public class HackathonService {
         long totalHackathons = hackathonRepository.countByDeletedFalse();
         long totalUsers = userRepository.count();
         long totalTeams = teamRepository.count();
-        long totalSubmissions = submissionRepository.count();
+
 
         summary.put("totalHackathons", totalHackathons);
         summary.put("totalParticipants", totalUsers);
         summary.put("totalTeams", totalTeams);
-        summary.put("totalSubmissions", totalSubmissions);
+
         summary.put("avgParticipation", totalHackathons > 0 ? totalUsers / totalHackathons : 0);
 
         // Branch Distribution

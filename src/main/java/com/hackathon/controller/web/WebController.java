@@ -18,7 +18,7 @@ public class WebController {
 
     private final HackathonService hackathonService;
     private final RegistrationService registrationService;
-    private final RatingService ratingService;
+    private final ExternalAchievementService externalAchievementService;
 
     @GetMapping("/")
     public String index(HttpSession session) {
@@ -73,22 +73,29 @@ public class WebController {
         return "hackathon_detail";
     }
 
-    @GetMapping("/judge/eval")
-    public String judgeEvalPage(HttpSession session, Model model) {
+    @GetMapping("/student/achievements")
+    public String studentAchievementsPage(HttpSession session, Model model) {
         User user = (User) session.getAttribute("user");
-        if (user == null || (user.getRole() != Role.JUDGE && user.getRole() != Role.ADMIN)) {
+        if (user == null || user.getRole() != Role.PARTICIPANT) {
             return "redirect:/login";
         }
+        
+        List<ExternalAchievement> achievements = externalAchievementService.getAchievementsByStudentId(user.getId());
+        model.addAttribute("achievements", achievements);
+        
+        return "student_achievements";
+    }
 
-        List<Hackathon> hackathons = hackathonService.getAllHackathons();
-        if (!hackathons.isEmpty()) {
-            Long firstHackathonId = hackathons.get(0).getId();
-            List<Submission> submissions = ratingService.getSubmissionsForHackathon(firstHackathonId);
-            List<Map<String, Object>> leaderboard = ratingService.getLeaderboardForHackathon(firstHackathonId);
-            model.addAttribute("submissions", submissions);
-            model.addAttribute("leaderboard", leaderboard);
+    @GetMapping("/admin/approvals")
+    public String adminApprovalsPage(HttpSession session, Model model) {
+        User user = (User) session.getAttribute("user");
+        if (user == null || user.getRole() != Role.ADMIN) {
+            return "redirect:/login";
         }
-
-        return "judge_eval";
+        
+        List<ExternalAchievement> pendingAchievements = externalAchievementService.getPendingAchievements();
+        model.addAttribute("pendingAchievements", pendingAchievements);
+        
+        return "admin_approvals";
     }
 }

@@ -71,102 +71,48 @@
             </div>
         </section>
 
-        <!-- Participant-only section: Team Formation + Submission -->
+        <!-- Participant-only section: Team Formation -->
         <c:if test="${sessionScope.role == 'PARTICIPANT'}">
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-bottom: 32px;" class="col-2">
 
-                <!-- Left: Team Formation -->
-                <div style="display: flex; flex-direction: column; gap: 24px;">
-
-                    <!-- Create Team -->
-                    <div class="glass-panel pattern-dots" style="padding: 32px; border-color: var(--secondary);">
-                        <h3 class="h3" style="color: var(--secondary); margin-bottom: 6px;">CREATE A TEAM 🚩</h3>
-                        <p class="text-muted label-sm" style="margin-bottom: 24px;">Generate an 8-character invite code to share with your teammates.</p>
-                        <form onsubmit="handleCreateTeam(event)">
-                            <input type="hidden" id="createHackathonId" value="${hackathon.id}"/>
-                            <div class="form-group">
-                                <label class="form-label" for="newTeamName">Team Name</label>
-                                <input class="form-input" id="newTeamName" type="text" placeholder="e.g. Binary Builders" required/>
-                            </div>
-                            <button type="submit" class="btn btn-primary" style="width: 100%;">
-                                <span class="material-symbols-outlined" style="font-size: 18px;">add</span>
-                                CREATE TEAM &amp; GET CODE ⚡
-                            </button>
-                        </form>
-                        <div id="createTeamResult" style="margin-top: 16px; display: none;"></div>
-                    </div>
-
-                    <!-- Join Team -->
-                    <div class="glass-panel pattern-stripes" style="padding: 32px; border-color: var(--tertiary);">
-                        <h3 class="h3" style="color: var(--tertiary); margin-bottom: 6px;">JOIN EXISTING TEAM 🤝</h3>
-                        <p class="text-muted label-sm" style="margin-bottom: 24px;">Enter the invite code shared by your team leader.</p>
-                        <form onsubmit="handleJoinTeam(event)">
-                            <div class="form-group">
-                                <label class="form-label" for="inviteCodeInput">Team Invite Code</label>
-                                <input class="form-input" id="inviteCodeInput" type="text"
-                                       placeholder="e.g. A1B2C3D4"
-                                       maxlength="8"
-                                       style="text-transform: uppercase; letter-spacing: 0.2em; text-align: center; font-size: 22px; font-weight: 900; color: var(--tertiary);"
-                                       oninput="this.value = this.value.toUpperCase()"
-                                       required/>
-                            </div>
-                            <button type="submit" class="btn btn-secondary" style="width: 100%;">
-                                <span class="material-symbols-outlined" style="font-size: 18px;">group_add</span>
-                                JOIN TEAM NOW 🚀
-                            </button>
-                        </form>
-                        <div id="joinTeamResult" style="margin-top: 16px; display: none;"></div>
-                    </div>
+                <!-- Create Team -->
+                <div class="glass-panel pattern-dots" style="padding: 32px; border-color: var(--secondary);">
+                    <h3 class="h3" style="color: var(--secondary); margin-bottom: 6px;">CREATE A TEAM 🚩</h3>
+                    <p class="text-muted label-sm" style="margin-bottom: 24px;">Generate an 8-character invite code to share with your teammates.</p>
+                    <form onsubmit="handleCreateTeam(event)">
+                        <input type="hidden" id="createHackathonId" value="${hackathon.id}"/>
+                        <div class="form-group">
+                            <label class="form-label" for="newTeamName">Team Name</label>
+                            <input class="form-input" id="newTeamName" type="text" placeholder="e.g. Binary Builders" required/>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">
+                            <span class="material-symbols-outlined" style="font-size: 18px;">add</span>
+                            CREATE TEAM &amp; GET CODE ⚡
+                        </button>
+                    </form>
+                    <div id="createTeamResult" style="margin-top: 16px; display: none;"></div>
                 </div>
 
-                <!-- Right: Submit Project -->
-                <div class="glass-panel pattern-checker" style="padding: 32px; border-color: var(--accent);">
-                    <h3 class="h3" style="color: var(--accent); margin-bottom: 6px;">SUBMIT PROJECT 📤</h3>
-                    <p class="text-muted label-sm" style="margin-bottom: 24px;">Submit your GitHub repo and live demo link for judge evaluation.</p>
-
-                    <c:choose>
-                        <c:when test="${empty teams}">
-                            <div style="text-align: center; padding: 48px 24px; border: 4px dashed var(--accent); border-radius: 20px; background: rgba(13,13,26,0.6);">
-                                <span class="material-symbols-outlined animate-bounce" style="font-size: 48px; color: var(--accent);">group_off</span>
-                                <p class="text-muted" style="margin-top: 16px; font-size: 15px; font-weight: 700;">No teams registered yet for this hackathon.<br/>Create or join a team first.</p>
-                            </div>
-                        </c:when>
-                        <c:otherwise>
-                            <form onsubmit="handleSubmitProject(event)">
-                                <input type="hidden" id="subHackathonId" value="${hackathon.id}"/>
-                                <div class="form-group">
-                                    <label class="form-label" for="subTeamId">Your Team</label>
-                                    <select class="form-select" id="subTeamId" required>
-                                        <option value="" disabled selected>Select your team...</option>
-                                        <c:forEach var="t" items="${teams}">
-                                            <option value="${t.id}">${t.teamName} — Code: ${t.inviteCode}</option>
-                                        </c:forEach>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label" for="projectTitle">Project Title</label>
-                                    <input class="form-input" id="projectTitle" type="text" placeholder="e.g. AI Eco-Tracker" required/>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label" for="projectDescription">Project Description</label>
-                                    <textarea class="form-textarea" id="projectDescription" rows="3" placeholder="Briefly describe your tech stack and solution..." required></textarea>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label" for="githubUrl">GitHub Repository URL</label>
-                                    <input class="form-input" id="githubUrl" type="url" placeholder="https://github.com/username/repo" required/>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label" for="demoUrl">Live Demo / Video URL <span style="font-weight: 400; color: var(--text-muted);">(optional)</span></label>
-                                    <input class="form-input" id="demoUrl" type="url" placeholder="https://your-demo-app.vercel.app"/>
-                                </div>
-                                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">
-                                    <span class="material-symbols-outlined" style="font-size: 18px;">upload</span>
-                                    SUBMIT PROJECT 🚀
-                                </button>
-                            </form>
-                            <div id="submitProjectResult" style="margin-top: 16px; display: none;"></div>
-                        </c:otherwise>
-                    </c:choose>
+                <!-- Join Team -->
+                <div class="glass-panel pattern-stripes" style="padding: 32px; border-color: var(--tertiary);">
+                    <h3 class="h3" style="color: var(--tertiary); margin-bottom: 6px;">JOIN EXISTING TEAM 🤝</h3>
+                    <p class="text-muted label-sm" style="margin-bottom: 24px;">Enter the invite code shared by your team leader.</p>
+                    <form onsubmit="handleJoinTeam(event)">
+                        <div class="form-group">
+                            <label class="form-label" for="inviteCodeInput">Team Invite Code</label>
+                            <input class="form-input" id="inviteCodeInput" type="text"
+                                   placeholder="e.g. A1B2C3D4"
+                                   maxlength="8"
+                                   style="text-transform: uppercase; letter-spacing: 0.2em; text-align: center; font-size: 22px; font-weight: 900; color: var(--tertiary);"
+                                   oninput="this.value = this.value.toUpperCase()"
+                                   required/>
+                        </div>
+                        <button type="submit" class="btn btn-secondary" style="width: 100%;">
+                            <span class="material-symbols-outlined" style="font-size: 18px;">group_add</span>
+                            JOIN TEAM NOW 🚀
+                        </button>
+                    </form>
+                    <div id="joinTeamResult" style="margin-top: 16px; display: none;"></div>
                 </div>
 
             </div>
@@ -278,46 +224,7 @@ async function handleJoinTeam(e) {
     }
 }
 
-async function handleSubmitProject(e) {
-    e.preventDefault();
-    const hackathonId = document.getElementById('subHackathonId').value;
-    const teamId = document.getElementById('subTeamId').value;
-    const projectTitle = document.getElementById('projectTitle').value.trim();
-    const description = document.getElementById('projectDescription').value.trim();
-    const githubUrl = document.getElementById('githubUrl').value.trim();
-    const demoUrl = document.getElementById('demoUrl').value.trim();
-    const resDiv = document.getElementById('submitProjectResult');
 
-    if (!teamId) {
-        resDiv.style.display = 'flex';
-        resDiv.className = 'alert-banner error';
-        resDiv.innerHTML = '<span class="material-symbols-outlined" style="font-size:20px;">error</span> Please select your team.';
-        return;
-    }
-
-    resDiv.style.display = 'none';
-    try {
-        const res = await fetch('<c:url value="/api/submissions"/>', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({ hackathonId, teamId, projectTitle, description, githubUrl, demoUrl })
-        });
-        const data = await res.json();
-        if (res.ok) {
-            resDiv.style.display = 'flex';
-            resDiv.className = 'alert-banner success';
-            resDiv.innerHTML = '<span class="material-symbols-outlined" style="font-size:20px;">check_circle</span> Project submitted successfully! Judges will evaluate your submission.';
-        } else {
-            resDiv.style.display = 'flex';
-            resDiv.className = 'alert-banner error';
-            resDiv.innerHTML = '<span class="material-symbols-outlined" style="font-size:20px;">error</span> ' + (data.message || 'Submission failed. Please try again.');
-        }
-    } catch (err) {
-        resDiv.style.display = 'flex';
-        resDiv.className = 'alert-banner error';
-        resDiv.innerHTML = '<span class="material-symbols-outlined" style="font-size:20px;">error</span> Server error. Please try again.';
-    }
-}
 </script>
 </body>
 </html>

@@ -86,19 +86,6 @@
                 </div>
             </div>
 
-            <!-- Stat Card 4: Quaternary (Orange) -->
-            <div class="glass-panel" style="padding: 28px; border-color: var(--quaternary); border-style: dashed; box-shadow: 6px 6px 0 var(--secondary), 12px 12px 0 var(--accent); transform: rotate(0.5deg); background: linear-gradient(135deg, rgba(45,27,78,0.9), rgba(255,107,53,0.15));">
-                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;">
-                    <span class="label-sm" style="color: var(--quaternary);">Submissions 📤</span>
-                    <div class="stat-icon" style="background: rgba(255,107,53,0.15); border-color: var(--quaternary);">
-                        <span class="material-symbols-outlined icon-filled" style="color: var(--quaternary); font-size: 26px;">upload_file</span>
-                    </div>
-                </div>
-                <div>
-                    <div class="stat-lg" style="color: #FFFFFF; text-shadow: 3px 3px 0 var(--quinary), 6px 6px 0 var(--quaternary);">${analytics.totalSubmissions}</div>
-                    <div class="label-sm text-muted" style="margin-top: 8px;">Submitted for Judging</div>
-                </div>
-            </div>
         </section>
 
         <!-- Branch Analytics and Activity Feed -->
@@ -133,39 +120,59 @@
                 </c:choose>
             </div>
 
-            <!-- Recent Activity Feed Card -->
-            <div class="glass-panel pattern-dots" style="padding: 32px; border-color: var(--tertiary);">
+            <!-- Recent Activity Feed Card (Animated List) -->
+            <div class="glass-panel pattern-dots" style="padding: 32px; border-color: var(--tertiary); position: relative;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
                     <h3 class="h3" style="color: var(--tertiary);">RECENT ACTIVITY FEED</h3>
                     <span class="chip chip-tertiary animate-pulse-glow">LIVE LOGS</span>
                 </div>
 
-                <div style="display: flex; flex-direction: column; gap: 16px;">
+                <!-- Animated List Container -->
+                <link rel="stylesheet" href="<c:url value='/css/animated-list.css'/>"/>
+                
+                <script>
+                    const realNotifications = [];
+                    
                     <c:forEach var="user" items="${analytics.recentUsers}">
-                        <div style="display: flex; align-items: center; gap: 14px; padding: 12px 16px; background: rgba(13,13,26,0.6); border: 2px solid var(--accent); border-radius: 16px;">
-                            <div class="stat-icon" style="width: 40px; height: 40px; border-color: var(--accent); background: rgba(255,58,242,0.15);">
-                                <span class="material-symbols-outlined" style="color: var(--accent); font-size: 20px;">person_add</span>
-                            </div>
-                            <div>
-                                <strong style="font-size: 15px;">${user.fullName != null ? user.fullName : user.username}</strong> registered as <span class="chip chip-primary" style="font-size: 10px; padding: 2px 8px;">${user.role}</span>
-                                <div class="text-muted label-sm" style="font-size: 12px; margin-top: 2px;">${user.email}</div>
-                            </div>
-                        </div>
+                    realNotifications.push({
+                        name: "User Registered",
+                        description: "${user.fullName != null ? user.fullName : user.username} joined as ${user.role}",
+                        time: "${user.formattedCreatedAt}",
+                        icon: "👤",
+                        color: "#FFB800"
+                    });
                     </c:forEach>
+
                     <c:forEach var="h" items="${analytics.recentHackathons}">
-                        <div style="display: flex; align-items: center; gap: 14px; padding: 12px 16px; background: rgba(13,13,26,0.6); border: 2px solid var(--secondary); border-radius: 16px;">
-                            <div class="stat-icon" style="width: 40px; height: 40px; border-color: var(--secondary); background: rgba(0,245,212,0.15);">
-                                <span class="material-symbols-outlined" style="color: var(--secondary); font-size: 20px;">event</span>
-                            </div>
-                            <div>
-                                <strong style="font-size: 15px;">Hackathon Created:</strong> ${h.title}
-                                <div class="text-muted label-sm" style="font-size: 12px; margin-top: 2px;">Category: ${h.category} • Start: ${h.startDate}</div>
-                            </div>
-                        </div>
+                    realNotifications.push({
+                        name: "New Hackathon",
+                        description: "${h.title} (${h.category})",
+                        time: "Starts ${h.startDate}",
+                        icon: "🚀",
+                        color: "#00C9A7"
+                    });
                     </c:forEach>
-                    <c:if test="${empty analytics.recentUsers && empty analytics.recentHackathons}">
-                        <p class="text-muted label-sm" style="text-align: center; padding: 32px;">No recent database activity found.</p>
-                    </c:if>
+
+                    // If there's no data, show a default system message
+                    if (realNotifications.length === 0) {
+                        realNotifications.push({
+                            name: "System Online",
+                            description: "Listening for new activity...",
+                            time: "Now",
+                            icon: "⚡",
+                            color: "#1E86FF"
+                        });
+                    }
+
+                    // Attach to window so the external JS can read it
+                    window.dashboardNotifications = realNotifications;
+                </script>
+
+                <script src="<c:url value='/js/animated-list.js'/>" defer></script>
+                
+                <div id="animatedListContainer" class="animated-list-container">
+                    <!-- JS will inject notifications here -->
+                    <div class="animated-list-mask"></div>
                 </div>
             </div>
         </section>

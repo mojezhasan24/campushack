@@ -61,7 +61,7 @@
                         <option value="">All Roles</option>
                         <option value="PARTICIPANT" ${selectedRole == 'PARTICIPANT' ? 'selected' : ''}>Student / Participant</option>
                         <option value="ADMIN" ${selectedRole == 'ADMIN' ? 'selected' : ''}>Faculty / Admin</option>
-                        <option value="JUDGE" ${selectedRole == 'JUDGE' ? 'selected' : ''}>Judge</option>
+
                     </select>
                 </div>
                 <button type="submit" class="btn btn-primary" style="padding: 10px 22px; font-size: 13px;">
@@ -116,7 +116,7 @@
                                 <td>
                                     <c:choose>
                                         <c:when test="${u.role == 'ADMIN'}"><span class="chip chip-primary">ADMIN 🛡️</span></c:when>
-                                        <c:when test="${u.role == 'JUDGE'}"><span class="chip chip-tertiary">JUDGE ⚖️</span></c:when>
+
                                         <c:otherwise><span class="chip chip-secondary">PARTICIPANT 🚀</span></c:otherwise>
                                     </c:choose>
                                 </td>
@@ -160,7 +160,7 @@
                                                     <select name="newRole" class="form-select" style="padding: 6px 10px; font-size: 11px; width: auto; border-width: 2px;" onchange="this.form.submit()">
                                                         <option value="PARTICIPANT" ${u.role == 'PARTICIPANT' ? 'selected' : ''}>Participant</option>
                                                         <option value="ADMIN" ${u.role == 'ADMIN' ? 'selected' : ''}>Admin</option>
-                                                        <option value="JUDGE" ${u.role == 'JUDGE' ? 'selected' : ''}>Judge</option>
+
                                                     </select>
                                                 </form>
                                             </c:otherwise>
