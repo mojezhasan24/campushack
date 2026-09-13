@@ -36,13 +36,13 @@ public class BootstrapAdminRunner implements CommandLineRunner {
 
         // Check if any admin exists
         boolean adminExists = userRepository.findAll().stream()
-                .anyMatch(user -> "ADMIN".equals(user.getRole()));
+                .anyMatch(user -> com.hackathon.entity.Role.ADMIN.equals(user.getRole()));
 
         if (!adminExists) {
             User admin = new User();
             admin.setUsername(adminEmail);
             admin.setPassword(adminPassword); // NOTE: Ensure you add password hashing if not already configured in your system!
-            admin.setRole("ADMIN");
+            admin.setRole(com.hackathon.entity.Role.ADMIN);
             userRepository.save(admin);
             logger.info("Successfully created the initial bootstrap ADMIN user.");
         } else {

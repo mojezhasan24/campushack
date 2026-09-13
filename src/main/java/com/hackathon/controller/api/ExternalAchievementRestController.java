@@ -4,41 +4,29 @@ import com.hackathon.entity.AchievementStatus;
 import com.hackathon.entity.ExternalAchievement;
 import com.hackathon.entity.User;
 import com.hackathon.service.ExternalAchievementService;
-import com.hackathon.service.UserService;
-import jakarta.servlet.http.HttpSession;
+import com.hackathon.service.FileStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/achievements")
 public class ExternalAchievementRestController {
 
     @Autowired
     private ExternalAchievementService achievementService;
 
     @Autowired
-    private UserService userService;
+    private FileStorageService fileStorageService;
 
-    @Autowired
-    private com.hackathon.service.FileStorageService fileStorageService;
-
-    private static final long MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
-    private static final java.util.List<String> ALLOWED_MIME_TYPES = java.util.Arrays.asList(
-            "image/jpeg", "image/png", "application/pdf"
-    );
-
-    @PostMapping("/submit")
+    @PostMapping(value = "/api/achievements/external", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> submitAchievement(
             @RequestParam("hackathonName") String hackathonName,
             @RequestParam("organizer") String organizer,
@@ -47,19 +35,7 @@ public class ExternalAchievementRestController {
             @RequestParam("projectRepoLink") String projectRepoLink,
             @RequestParam("demoLink") String demoLink,
             @RequestParam(value = "certificate", required = false) MultipartFile certificate,
-            HttpSession session) {
-
-        Long userId = (Long) session.getAttribute("userId");
-        if (userId == null) {
-            return ResponseEntity.status(401).body(Map.of("success", false, "message", "Unauthorized"));
-        }
-
-        User student = null;
-        try {
-            student = userService.getUserById(userId);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(401).body(Map.of("success", false, "message", "User not found"));
-        }
+            @AuthenticationPrincipal User student) {
 
         ExternalAchievement achievement = new ExternalAchievement();
         achievement.setStudent(student);
@@ -71,39 +47,32 @@ public class ExternalAchievementRestController {
         achievement.setDemoLink(demoLink);
 
         if (certificate != null && !certificate.isEmpty()) {
-            // 1. Validate File Size
-            if (certificate.getSize() > MAX_FILE_SIZE) {
-                return ResponseEntity.badRequest().body(Map.of("success", false, "message", "File too large (max 5MB)"));
-            }
-
-            // 2. Validate MIME Type
-            String mimeType = certificate.getContentType();
-            if (mimeType == null || !ALLOWED_MIME_TYPES.contains(mimeType)) {
-                return ResponseEntity.badRequest().body(Map.of("success", false, "message", "Invalid file type. Only JPG, PNG, and PDF allowed."));
-            }
-
             try {
-                // Upload file
                 String publicUrl = fileStorageService.uploadFile(certificate, "certificates");
                 achievement.setCertificatePath(publicUrl);
-            } catch (IOException e) {
-                e.printStackTrace();
-                return ResponseEntity.status(500).body(Map.of("success", false, "message", "Failed to upload certificate"));
+            } catch (IOException | IllegalArgumentException e) {
+                return ResponseEntity.badRequest().body(Map.of("success", false, "message", e.getMessage()));
             }
         }
 
         achievementService.saveAchievement(achievement);
-
-        return ResponseEntity.ok(Map.of("success", true, "message", "Achievement submitted successfully"));
+        return ResponseEntity.ok(Map.of("success", true, "message", "Achievement submitted successfully", "achievement", achievement));
     }
 
-    @PostMapping("/{id}/approve")
-    public ResponseEntity<?> approveAchievement(@PathVariable Long id, HttpSession session) {
-        String role = (String) session.getAttribute("role");
-        if (!"ADMIN".equals(role)) {
-            return ResponseEntity.status(403).body(Map.of("success", false, "message", "Forbidden"));
-        }
+    @GetMapping("/api/achievements/my")
+    public ResponseEntity<List<ExternalAchievement>> getMyAchievements(@AuthenticationPrincipal User student) {
+        return ResponseEntity.ok(achievementService.getAchievementsByStudentId(student.getId()));
+    }
 
+    @GetMapping("/api/admin/achievements/pending")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<ExternalAchievement>> getPendingAchievements() {
+        return ResponseEntity.ok(achievementService.getPendingAchievements());
+    }
+
+    @PostMapping("/api/admin/achievements/{id}/approve")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> approveAchievement(@PathVariable Long id) {
         ExternalAchievement updated = achievementService.updateAchievementStatus(id, AchievementStatus.APPROVED);
         if (updated != null) {
             return ResponseEntity.ok(Map.of("success", true, "message", "Achievement approved"));
@@ -111,13 +80,9 @@ public class ExternalAchievementRestController {
         return ResponseEntity.status(404).body(Map.of("success", false, "message", "Achievement not found"));
     }
 
-    @PostMapping("/{id}/reject")
-    public ResponseEntity<?> rejectAchievement(@PathVariable Long id, HttpSession session) {
-        String role = (String) session.getAttribute("role");
-        if (!"ADMIN".equals(role)) {
-            return ResponseEntity.status(403).body(Map.of("success", false, "message", "Forbidden"));
-        }
-
+    @PostMapping("/api/admin/achievements/{id}/reject")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> rejectAchievement(@PathVariable Long id) {
         ExternalAchievement updated = achievementService.updateAchievementStatus(id, AchievementStatus.REJECTED);
         if (updated != null) {
             return ResponseEntity.ok(Map.of("success", true, "message", "Achievement rejected"));

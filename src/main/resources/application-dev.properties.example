@@ -1,0 +1,27 @@
+# H2 Database Configuration
+spring.datasource.url=jdbc:h2:mem:campushack
+spring.datasource.driverClassName=org.h2.Driver
+spring.datasource.username=sa
+spring.datasource.password=
+
+# H2 Console Configuration
+spring.h2.console.enabled=true
+spring.h2.console.path=/h2-console
+
+# JPA / Hibernate Settings
+spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
+spring.jpa.hibernate.ddl-auto=create-drop
+spring.jpa.show-sql=true
+
+# Local file upload directory
+app.upload.dir=./uploads
+
+# CORS Configuration Default for Dev
+CORS_ALLOWED_ORIGINS=http://localhost:5173
+
+# Dev JWT Secret
+application.security.jwt.secret-key=YOUR_64_CHAR_SECRET_HERE_AT_LEAST_32_CHARS
+
+# Mail config
+spring.mail.username=your-email@gmail.com
+spring.mail.password=YOUR_GMAIL_APP_PASSWORD

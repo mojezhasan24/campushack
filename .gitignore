@@ -9,5 +9,15 @@ apache-maven-*/
 .settings/
 .idea/
 *.iml
+.vscode/
 .DS_Store
 *.log
+
+# Environment and Secrets
+application-dev.properties
+application-local.properties
+*.local.properties
+.env
+
+# Local Uploads
+uploads/

@@ -1,7 +1,10 @@
 # PostgreSQL Database Configuration
+# Set SPRING_DATASOURCE_URL to the JDBC connection string (e.g. jdbc:postgresql://ep-xxx.region.aws.neon.tech/neondb?sslmode=require)
 spring.datasource.url=${SPRING_DATASOURCE_URL}
 spring.datasource.driverClassName=org.postgresql.Driver
+# Set SPRING_DATASOURCE_USERNAME to the database username
 spring.datasource.username=${SPRING_DATASOURCE_USERNAME}
+# Set SPRING_DATASOURCE_PASSWORD to the database password
 spring.datasource.password=${SPRING_DATASOURCE_PASSWORD}
 
 # H2 Console (Disabled in Prod)
@@ -17,14 +20,18 @@ spring.sql.init.mode=always
 spring.sql.init.schema-locations=classpath:schema-prod.sql
 
 # Supabase Storage Configuration (S3-compatible)
+# Example: https://<project_ref>.supabase.co/storage/v1/s3
 aws.s3.endpointUrl=${SUPABASE_S3_ENDPOINT}
+# Must match your Supabase project region (e.g. ap-southeast-1)
 aws.s3.region=${SUPABASE_S3_REGION}
 aws.s3.accessKeyId=${SUPABASE_S3_ACCESS_KEY}
 aws.s3.secretAccessKey=${SUPABASE_S3_SECRET_KEY}
 aws.s3.bucketName=${SUPABASE_S3_BUCKET}
+# Public URL for the bucket (e.g. https://<project_ref>.supabase.co/storage/v1/object/public/<bucket_name>)
 aws.s3.publicUrlPrefix=${SUPABASE_PUBLIC_URL}
 
 # Required JWT Key for Prod
+# Must be at least 32 characters long
 application.security.jwt.secret-key=${JWT_SECRET_KEY}
 
 # Mail Config
@@ -36,6 +43,7 @@ spring.mail.properties.mail.smtp.auth=${SPRING_MAIL_AUTH}
 spring.mail.properties.mail.smtp.starttls.enable=${SPRING_MAIL_STARTTLS}
 
 # CORS Configuration
+# E.g. https://my-frontend.vercel.app
 CORS_ALLOWED_ORIGINS=${CORS_ALLOWED_ORIGINS}
 
 # Logging
